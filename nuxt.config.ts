@@ -1,6 +1,11 @@
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
 export default defineNuxtConfig({
+  runtimeConfig: {
+    public: {
+      BASE_URL: 'http://localhost:5237', //replace with ENV: NUXT_PUBLIC_BASE_URL 
+    },
+  },
  devtools: { enabled: false },
  ssr: false,
 
@@ -29,7 +34,7 @@ imports: {
    vue: {
      template: {
        transformAssetUrls,
-     },
+     }, 
    },
  },
 
