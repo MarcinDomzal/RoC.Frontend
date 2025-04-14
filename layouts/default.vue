@@ -1,8 +1,15 @@
 <template>
     <v-app>
-        <v-app-bar>
+        <v-app-bar color="brand">
         <v-app-bar-nav-icon v-if="mobile" @click="drawer = !drawer"></v-app-bar-nav-icon>
         <v-app-bar-title>RoC</v-app-bar-title>
+        <template v-slot:append>
+    <v-btn icon="mdi-heart"></v-btn>
+
+    <v-btn icon="mdi-magnify"></v-btn>
+
+    <v-btn icon="mdi-dots-vertical"></v-btn>
+  </template>
       </v-app-bar>
 
       <v-navigation-drawer :order="mobile ? -1 : 0" v-model="drawer">
