@@ -6,28 +6,41 @@ Kod
     <div v-if="userStore.$state.loading === true" class="pa-4 d-flex justify-center">
     <VProgressCircular indeterminate></VProgressCircular>
 </div>
-    <VForm v-else @submit.prevent>
+    <VForm v-else @submit.prevent="login" :disabled="loading">
         <VCardText>
             <v-text-field class="mb-4" variant="outlined" v-model="viewModel.email" label="Email"></v-text-field>
             <v-text-field class="mb-4" variant="outlined" v-model="viewModel.password" type="password" label="Hasło"></v-text-field>
+            <VAlert v-if="errorMsg" type="error" variant="tonal">{{ errorMsg }}</VAlert>
         </VCardText>
         <VCardActions>
-            <v-btn class="mx-auto" color="primary" type="submit" variant="elevated">Zaloguj</v-btn>
+            <v-btn class="mx-auto" color="primary" type="submit" variant="elevated" :loading="loading">Zaloguj</v-btn>
         </VCardActions>
     </VForm>
 </VCard>
 </VDialog>
 </template>
-
 <style lang="scss" scoped>
-
 </style>
+
+
+
+
+
+
+
+
+
+
 
 <script setup>
 const userStore = useUserStore();
+const { getErrorMessage } = useWebApiResponseParser();
 const show = computed(() => {
     return userStore.$state.isLoggedIn === false || userStore.$state.loading === true;
 });
+ 
+const errorMsg = ref("");
+const loading = ref(false);
 
 const viewModel = ref({
     email: '',
@@ -37,4 +50,25 @@ const viewModel = ref({
 const submit = () => {
     console.log(viewModel.value);
 }
+
+const login = () => {  
+    loading.value = true;
+    errorMsg.value = "";
+
+    useWebApiFetch('/User/Login', {
+      method: 'POST',
+      body: { ...viewModel.value },
+      onResponseError: ({ response }) => {
+        errorMsg.value = getErrorMessage(response, { "InvalidLoginOrPassword": "Błędny login lub hasło"});
+      }
+    })
+    .then((response) => {
+        if (response.data.value) {
+            userStore.loadLoggedInUser();
+        }
+    })
+    .finally(() => {
+        loading.value = false;
+    });
+};
 </script>
