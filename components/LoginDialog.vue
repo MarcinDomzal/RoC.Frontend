@@ -8,8 +8,8 @@ Kod
 </div>
     <VForm v-else @submit.prevent="login" :disabled="loading">
         <VCardText>
-            <v-text-field class="mb-4" variant="outlined" v-model="viewModel.email" label="Email"></v-text-field>
-            <v-text-field class="mb-4" variant="outlined" v-model="viewModel.password" type="password" label="Hasło"></v-text-field>
+            <v-text-field class="mb-4" variant="outlined" v-model="viewModel.email" label="Email" :rules="[ruleEmail, ruleRequired]"></v-text-field>
+            <v-text-field class="mb-4" variant="outlined" v-model="viewModel.password" type="password" label="Hasło" :rules="[ruleRequired]"></v-text-field>
             <VAlert v-if="errorMsg" type="error" variant="tonal">{{ errorMsg }}</VAlert>
         </VCardText>
         <VCardActions>
@@ -34,6 +34,7 @@ Kod
 
 <script setup>
 const userStore = useUserStore();
+const { ruleRequired, ruleEmail } = useFormValidationRules();
 const { getErrorMessage } = useWebApiResponseParser();
 const show = computed(() => {
     return userStore.$state.isLoggedIn === false || userStore.$state.loading === true;
@@ -47,9 +48,13 @@ const viewModel = ref({
     password: ''
 });
 
-const submit = () => {
-    console.log(viewModel.value);
+const submit = async (ev) => {
+    const { valid } = await ev;
+    if (valid) {
+        login();
+    }
 }
+
 
 const login = () => {  
     loading.value = true;
