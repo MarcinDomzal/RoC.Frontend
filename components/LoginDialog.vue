@@ -1,4 +1,3 @@
-Kod
 <template>
   <VDialog :model-value="show" persistent width="400" scroll-strategy="none">
     <VCard class="py-4">
@@ -6,7 +5,7 @@ Kod
     <div v-if="userStore.$state.loading === true" class="pa-4 d-flex justify-center">
     <VProgressCircular indeterminate></VProgressCircular>
 </div>
-    <VForm v-else @submit.prevent="login" :disabled="loading">
+    <VForm v-else @submit.prevent="submit" :disabled="loading">
         <VCardText>
             <v-text-field class="mb-4" variant="outlined" v-model="viewModel.email" label="Email" :rules="[ruleEmail, ruleRequired]"></v-text-field>
             <v-text-field class="mb-4" variant="outlined" v-model="viewModel.password" type="password" label="Hasło" :rules="[ruleRequired]"></v-text-field>
@@ -19,23 +18,15 @@ Kod
 </VCard>
 </VDialog>
 </template>
-<style lang="scss" scoped>
-</style>
 
 
-
-
-
-
-
-
-
-
+<style lang="scss" scoped></style>
 
 <script setup>
 const userStore = useUserStore();
-const { ruleRequired, ruleEmail } = useFormValidationRules();
 const { getErrorMessage } = useWebApiResponseParser();
+const { ruleRequired, ruleEmail } = useFormValidationRules();
+
 const show = computed(() => {
     return userStore.$state.isLoggedIn === false || userStore.$state.loading === true;
 });
@@ -54,7 +45,6 @@ const submit = async (ev) => {
         login();
     }
 }
-
 
 const login = () => {  
     loading.value = true;
