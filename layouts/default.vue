@@ -12,23 +12,36 @@
         </v-app-bar>
         <v-navigation-drawer :order="mobile ? -1 : 0" v-model="drawer" v-if="userStore.$state.isLoggedIn === true">
             <v-list-item lines="two">
-    <template v-slot:prepend>
-	    <v-avatar color="brand" v-if="userStore.$state.userData?.email">
-	        {{ userStore.$state.userData.email[0].toUpperCase() }}
-	    </v-avatar>
-    </template>
-    <VListItemTitle v-if="accountStore.$state.accountData?.name">{{ accountStore.$state.accountData.name  }}</VListItemTitle>
-    <VListItemSubtitle v-if="userStore.$state.userData?.email">{{ userStore.$state.userData.email }}</VListItemSubtitle>
-</v-list-item>
-<VDivider></VDivider>
+
+                <template v-slot:prepend>
+                    <v-avatar color="brand" v-if="userStore.$state.userData?.email">
+                        {{ userStore.$state.userData.email[0].toUpperCase() }}
+                    </v-avatar>
+                </template>
+                <VListItemTitle v-if="accountStore.$state.accountData?.name">{{ accountStore.$state.accountData.name }}
+                </VListItemTitle>
+                <VListItemSubtitle v-if="userStore.$state.userData?.email">{{ userStore.$state.userData.email }}
+                </VListItemSubtitle>
+            </v-list-item>
+            <VDivider></VDivider>
             <VList>
                 <VListItem v-for="item in menuItems" :key="item.name" :title="item.name" :prepend-icon="item.icon"
                     :to="item.url"></VListItem>
             </VList>
+
+            <template v-slot:append>
+    <div class="pa-2">
+				<v-btn block variant="text" @click="logout" prepend-icon="mdi-logout">
+				Wyloguj się
+				</v-btn>
+    </div>
+</template>
+
+
         </v-navigation-drawer>
         <v-main>
             <div class="pa-4">
-                <NuxtPage v-if="userStore.$state.isLoggedIn === true"/>
+                <NuxtPage v-if="userStore.$state.isLoggedIn === true" />
             </div>
         </v-main>
         <LoginDialog></LoginDialog>
@@ -64,6 +77,11 @@ function toggleTheme() {
     theme.global.name.value = newTheme;
     currentTheme.value = newTheme;
 
+}
+
+
+const logout = () => {
+    userStore.logout();
 }
 
 

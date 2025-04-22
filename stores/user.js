@@ -18,7 +18,7 @@ export const useUserStore = defineStore({
                     if (data.value) {
                         this.isLoggedIn = true;
                         this.userData = data.value;
-                      //  accountStore.loadCurrentAccount();
+                        accountStore.loadCurrentAccount();
                     } else if (error.value) {
                         this.isLoggedIn = false;
                         this.userData = null;
