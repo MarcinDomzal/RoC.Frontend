@@ -3,7 +3,8 @@ import { hash } from 'ohash'
 export const useWebApiFetch = function (request, opts) {
     const config = useRuntimeConfig()
 
-    return useFetch(request, { baseURL: config.public.BASE_URL,
+    return useFetch(request, {
+        baseURL: config.public.BASE_URL,
         onRequest({ request, options }) {
             // Set the request headers
         },
@@ -14,9 +15,11 @@ export const useWebApiFetch = function (request, opts) {
 
         },
         onResponseError({ request, response, options }) {
-            // Global error message
+            const message = getErrorMessage(response, {});
+            globalMessageStore.showErrorMessage(message);
         },
         credentials: 'include',
-        key : hash(['webapi-fetch', request, opts?.body, opts?.params, opts?.method, opts?.query]),
-        ...opts});
+        key: hash(['webapi-fetch', request, opts?.body, opts?.params, opts?.method, opts?.query]),
+        ...opts
+    });
 }

@@ -37,6 +37,7 @@ const viewModel = ref({
 const errorMsg = ref("");
 const loading = ref(false);
 
+const globalMessageStore = useGlobalMessageStore();
 
 const userStore = useUserStore();
 const { getErrorMessage } = useWebApiResponseParser();
@@ -63,12 +64,13 @@ const register = () => {
     useWebApiFetch('/User/CreateUserWithAccount', {
       method: 'POST',
       body: { ...viewModel.value },
-      onResponseError: ({ response }) => {
-        errorMsg.value = getErrorMessage(response, { "AccountWithThisMailAlreadyExist": "Konto już istnieje"});
-      }
+     onResponseError: ({ response }) => {
+       errorMsg.value = getErrorMessage(response, { "AccountWithThisMailAlreadyExist": "Konto już istnieje"});
+}
     })
     .then((response) => {
         if (response.data.value) {
+            globalMessageStore.showSuccessMessage('Twoje konto zostało utworzone. Zalogowano do aplikacji.');
            router.push({path: '/'})
         }
     })
