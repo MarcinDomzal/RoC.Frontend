@@ -60,7 +60,14 @@ const drawer = ref(null)
 const currentTheme = useStorage('currentTheme', 'light');
 const userStore = useUserStore();
 const accountStore = useAccountStore();
+const antiForgeryStore = useAntiForgeryStore();
 const confirmDialog = ref(null);
+
+
+
+
+
+
 const menuItems = [
     {
         name: 'Strona główna',
@@ -103,6 +110,7 @@ const logout = () => {
 }
 
 
+await antiForgeryStore.loadAntiForgeryToken();
 
 
 
